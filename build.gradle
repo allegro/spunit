@@ -1,0 +1,41 @@
+buildscript {
+    ext.kotlin_version = '1.7.10'
+
+    ext.versions = [
+            junit: '5.9.1',
+    ]
+}
+
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+
+project.group = 'pl.allegro.logistics.tech'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlin_version
+    implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
+    implementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
+
+    testImplementation group: 'com.willowtreeapps.assertk', name: 'assertk-jvm', version: '0.25'
+    testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}
+
+wrapper {
+    gradleVersion = '7.5.1'
+}
