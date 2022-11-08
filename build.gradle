@@ -18,6 +18,9 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
 }
 
+repositories {
+    mavenCentral()
+}
 
 scmVersion {
     versionCreator("versionWithBranch")
@@ -94,15 +97,13 @@ publishing {
             }
         }
     }
-}
-
-repositories {
-    mavenCentral()
-    maven {
-        if (version.toString().endsWith("SNAPSHOT")) {
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-        } else {
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+    repositories {
+        maven {
+            if (version.toString().endsWith("SNAPSHOT")) {
+                url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+            } else {
+                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            }
         }
     }
 }
