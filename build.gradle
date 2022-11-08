@@ -13,6 +13,7 @@ plugins {
     id 'java'
     id 'signing'
     id 'maven-publish'
+    id 'jacoco'
     id 'pl.allegro.tech.build.axion-release' version '1.14.2'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
@@ -63,6 +64,17 @@ test {
     useJUnitPlatform()
     testLogging {
         exceptionFormat = 'full'
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.2'
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
     }
 }
 
