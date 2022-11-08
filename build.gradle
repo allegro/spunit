@@ -1,4 +1,7 @@
 buildscript {
+    repositories {
+        mavenCentral()
+    }
     ext.kotlin_version = '1.7.10'
 
     ext.versions = [
@@ -8,16 +11,23 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'signing'
+    id 'maven-publish'
+    id 'pl.allegro.tech.build.axion-release' version '1.14.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
 
-project.group = 'pl.allegro.logistics.tech'
-
-repositories {
-    mavenCentral()
+scmVersion {
+    versionCreator("versionWithBranch")
 }
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+project.group = 'pl.allegro.tech'
+project.version = scmVersion.version
 
 dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: kotlin_version
@@ -29,10 +39,91 @@ dependencies {
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
 }
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 test {
     useJUnitPlatform()
     testLogging {
         exceptionFormat = 'full'
+    }
+}
+
+publishing {
+    publications {
+        sonatype(MavenPublication) {
+            artifactId = "spunit"
+            from components.java
+
+            pom {
+                name = 'spunit'
+                description = 'Spunit test framework'
+                url = 'https://github.com/allegro/spunit'
+                inceptionYear = '2022'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'kochmap'
+                        name = 'Piotr Kochmański'
+                    }
+                }
+                scm {
+                    connection = 'scm:git@github.com:allegro/spunit.git'
+                    developerConnection = 'scm:git@github.com:allegro/spunit.git'
+                    url = 'https://github.com/allegro/spunit'
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        if (version.toString().endsWith("SNAPSHOT")) {
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        } else {
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = System.getenv("SONATYPE_USERNAME")
+            password = System.getenv("SONATYPE_PASSWORD")
+        }
+    }
+}
+
+if (System.getenv("GPG_KEY_ID")) {
+    signing {
+        useInMemoryPgpKeys(
+                System.getenv("GPG_KEY_ID"),
+                System.getenv("GPG_PRIVATE_KEY"),
+                System.getenv("GPG_PRIVATE_KEY_PASSWORD")
+        )
+        sign publishing.publications
     }
 }
 
