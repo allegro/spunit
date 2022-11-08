@@ -2,6 +2,10 @@ name: Build
 
 on: [pull_request, push, workflow_dispatch]
 
+permissions:
+  contents: write
+  pull-requests: write
+  
 jobs:
   build:
 
@@ -19,3 +23,24 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew --no-daemon build
+      
+      - name: Jacoco
+        run: ./gradlew jacocoTestReport
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+  dependabot:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
+    needs: build
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.3.4
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
