@@ -66,6 +66,8 @@ A good introduction to this library is this [test file](./src/test/kotlin/pl/all
 - There is no formatter for where block, so autoformatting can make mess.
 
 # Changelog
+## 0.1.1
+- Fix OneParamTestCase displayName
 ## 0.1.0
 - Release as open-source software
 
