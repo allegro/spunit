@@ -31,7 +31,7 @@ class SpunitTest : SpunitHooks {
     }
 
     @Spunit
-    fun `should run test with one parameter`() = test { foo: String ->
+    fun `should run test with one parameter`() = test("#foo") { foo: String ->
         expect
         assertThat(foo).hasLength(3)
     }.where {
