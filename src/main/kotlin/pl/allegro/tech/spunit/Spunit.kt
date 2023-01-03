@@ -118,7 +118,7 @@ class OneParamTestCase<A>(private val testBlock: OneParamTestCase<A>.(A) -> Unit
         whereBlock()
         return aParameters.mapIndexed { i, a ->
             val name = if (caseDescription != null) {
-                caseDescription.replace("#${header[0]}", a.toString())
+                caseDescription.replace("#$header", a.toString())
             } else {
                 "Test #${i + 1}"
             }
