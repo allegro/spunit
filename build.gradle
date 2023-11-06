@@ -2,7 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    ext.kotlin_version = '1.9.10'
+    ext.kotlin_version = '1.9.20'
 
     ext.versions = [
             junit: '5.9.1',
