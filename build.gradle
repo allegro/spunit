@@ -38,7 +38,7 @@ dependencies {
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: kotlin_version
     implementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
 
-    testImplementation group: 'com.willowtreeapps.assertk', name: 'assertk-jvm', version: '0.28.0'
+    testImplementation group: 'com.willowtreeapps.assertk', name: 'assertk-jvm', version: '0.28.1'
     testRuntimeOnly  group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
 }
